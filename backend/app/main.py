@@ -18,17 +18,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.on_event("startup")
-async def startup_event():
-    # create indexes if desired
-    try:
-        await ensure_indexes()
-    except Exception:
-        pass
 
 @app.post("/feedback", status_code=201)
 async def post_feedback(payload: FeedbackIn):
-    d = payload.dict()
+    d = payload.model_dump()
     created = await create_feedback(d)
     return created
 

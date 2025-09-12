@@ -4,7 +4,7 @@ from bson import ObjectId
 
 def feedback_doc(payload: dict) -> dict:
     doc = payload.copy()
-    doc["timestamp"] = payload.get("timestamp") or datetime.utcnow()
+    doc["timestamp"] = payload.get("timestamp") or datetime.now()
     return doc
 
 def serialize_feedback(doc: dict) -> dict:
