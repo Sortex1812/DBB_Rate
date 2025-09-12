@@ -4,10 +4,10 @@ from typing import Optional
 from datetime import datetime
 
 class FeedbackIn(BaseModel):
-    subject: str = Field(..., example="Mathe")
-    mood: str = Field(..., example="🙂")  # or 'good/neutral/bad'
-    difficulty: str = Field(..., example="mittel")  # leicht/mittel/schwer
-    comment: Optional[str] = Field(None, example="Mehr Beispiele wären gut")
+    subject: str = Field(..., examples=["Mathe"])
+    mood: str = Field(..., examples=["🙂"])  # or 'good/neutral/bad'
+    difficulty: str = Field(..., examples=["mittel"])  # leicht/mittel/schwer
+    comment: Optional[str] = Field(..., examples=["Mehr Beispiele wären gut"])
     timestamp: Optional[datetime] = None
 
 class FeedbackOut(FeedbackIn):
