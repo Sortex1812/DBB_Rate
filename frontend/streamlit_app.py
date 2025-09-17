@@ -1,4 +1,3 @@
-# frontend/streamlit_app.py
 import streamlit as st
 import requests
 import os
@@ -40,7 +39,53 @@ role = st.session_state["role"]
 
 if role == "student":
     # Student only has feedback form
-    st.header("Schnelles, anonymes Feedback")
+     st.header("Schnelles, anonymes Feedback")
+
+    # Load available subjects from backend
+    try:
+        subjects = requests.get(f"{API_BASE}/subjects", timeout=5).json()
+    except Exception as e:
+        subjects = []
+        st.error(f"Konnte Fächer nicht laden: {e}")
+
+    if not subjects:
+        st.warning("Keine Fächer gefunden.")
+    else:
+        with st.form("feedback_form"):
+            # Subject selection
+            subject = st.selectbox("Fach", subjects)
+
+            # Fetch teachers for selected subject
+            try:
+                teachers = requests.get(f"{API_BASE}/subjects/{subject}", timeout=5).json()
+            except Exception as e:
+                teachers = []
+                st.error(f"Konnte Lehrer nicht laden: {e}")
+
+            teacher = st.selectbox("Lehrer", teachers) if teachers else st.text_input("Lehrer (frei eingeben)")
+
+            # Rest of feedback form
+            mood = st.selectbox("Stimmung", ["😀", "🙂", "😐", "😕", "😞"])
+            difficulty = st.radio("Wie schwer war die Stunde?", ["leicht", "mittel", "schwer"])
+            comment = st.text_area("Verbesserungsvorschlag (optional)")
+            submitted = st.form_submit_button("Absenden")
+
+        if submitted:
+            payload = {
+                "subject": subject,
+                "teacher": teacher,
+                "mood": mood,
+                "difficulty": difficulty,
+                "comment": comment or None,
+            }
+            try:
+                resp = requests.post(f"{API_BASE}/feedback", json=payload, timeout=5)
+                if resp.status_code in (200, 201):
+                    st.success("Danke! Dein Feedback wurde anonym gesendet.")
+                else:
+                    st.error(f"Fehler: {resp.status_code} {resp.text}")
+            except Exception as e:
+                st.error(f"Fehler beim Senden: {e}")
 
     # Load available subjects from backend
     try:
@@ -107,7 +152,9 @@ elif role == "teacher":
         feedbacks = requests.get(f"{API_BASE}/feedbacks?limit=50").json()
         comments = [f["comment"] for f in feedbacks if f.get("comment")]
         for f in feedbacks[:20]:
-            st.write(f"- **{f['subject']}** — {f['difficulty']} — {f['mood']} — {f.get('comment') or ''}")
+            st.write(
+                f"- **{f['subject']}** — {f['difficulty']} — {f['mood']} — {f.get('comment') or ''}"
+            )
 
         if comments:
             st.subheader("Wordcloud der Kommentare")
