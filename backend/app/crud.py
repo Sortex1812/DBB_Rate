@@ -1,4 +1,3 @@
-# backend/app/crud.py
 from typing import List
 from .db import feedback_collection
 from .models import feedback_doc, serialize_feedback
@@ -24,13 +23,12 @@ async def get_feedbacks(limit: int = 100) -> List[dict]:
 
 async def get_stats() -> dict:
     total = await feedback_collection.count_documents({})
-    # aggregation for difficulty
     pipeline = [
         {"$group": {"_id": "$difficulty", "count": {"$sum": 1}}}
     ]
     cursor = await feedback_collection.aggregate(pipeline)
     by_difficulty = {doc["_id"]: doc["count"] for doc in await cursor.to_list(length=100)}
-    # aggregation for mood
+    
     pipeline2 = [{"$group": {"_id": "$mood", "count": {"$sum": 1}}}]
     cursor2 = await feedback_collection.aggregate(pipeline2)
     by_mood = {doc["_id"]: doc["count"] for doc in await cursor2.to_list(length=100)}

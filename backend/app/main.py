@@ -1,4 +1,3 @@
-# backend/app/main.py
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,10 +8,9 @@ import asyncio
 
 app = FastAPI(title="Schueler Feedback API")
 
-# CORS (damit Streamlit lokal Anfragen machen kann)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # für Schulprojekt ok; produktiv einschränken
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

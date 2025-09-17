@@ -1,4 +1,3 @@
-# backend/app/db.py
 import os
 from pymongo import MongoClient
 from pymongo import AsyncMongoClient
