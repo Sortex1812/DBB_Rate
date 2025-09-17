@@ -23,7 +23,7 @@ if "role" not in st.session_state:
             data = resp.json()
             st.session_state["role"] = data["role"]
             st.session_state["username"] = data["username"]
-            st.experimental_rerun()
+            st.rerun()
         elif resp.status_code == 401:
             st.error("Ungültige Login-Daten")
         else:
@@ -39,7 +39,7 @@ role = st.session_state["role"]
 
 if role == "student":
     # Student only has feedback form
-     st.header("Schnelles, anonymes Feedback")
+    st.header("Schnelles, anonymes Feedback")
 
     # Load available subjects from backend
     try:
@@ -171,4 +171,4 @@ else:
     st.error("Unbekannte Rolle. Bitte erneut einloggen.")
     if st.button("Logout"):
         st.session_state.clear()
-        st.experimental_rerun()
+        st.rerun()
