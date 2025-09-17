@@ -1,5 +1,5 @@
 from typing import List
-from .db import feedback_collection
+from .db import feedback_collection, db
 from .models import feedback_doc, serialize_feedback
 from datetime import datetime
 
@@ -33,3 +33,9 @@ async def get_stats() -> dict:
     cursor2 = await feedback_collection.aggregate(pipeline2)
     by_mood = {doc["_id"]: doc["count"] for doc in await cursor2.to_list(length=100)}
     return {"total": total, "by_difficulty": by_difficulty, "by_mood": by_mood}
+
+async def get_teachers_by_subject(subject: str):
+    # Assuming you have a "teachers" collection with "subjects" field (list of subjects)
+    teachers_collection = db["teachers"]
+    teachers = teachers_collection.find({"subjects": subject})
+    return [t["name"] for t in teachers]
