@@ -34,9 +34,15 @@ async def get_stats() -> dict:
     by_mood = {doc["_id"]: doc["count"] for doc in await cursor2.to_list(length=100)}
     return {"total": total, "by_difficulty": by_difficulty, "by_mood": by_mood}
 
+async def get_subjects() -> List[str]:
+    subjects_collection = db["subjects"]
+    subjects = await subjects_collection.distinct("subject")
+    return subjects
+
 async def get_teachers_by_subject(subject: str):
     subjects_collection = db["subjects"]
-    return subjects_collection.find({"subject": subject})
+    teachers = await subjects_collection.find_one({"subject": subject})
+    return teachers
 
 async def login_user(username: str, password: str) -> dict:
     users_collection = db["user"]

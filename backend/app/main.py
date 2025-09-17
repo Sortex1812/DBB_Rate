@@ -46,9 +46,12 @@ async def list_feedbacks(limit: int = 100):
 async def stats():
     return await get_stats()
 
+@app.get("/subjects/{subject}")
+async def get_subjects():
+    return await get_subjects()
 
-@app.get("/teachers")
-async def teachers(subject: str = Query(...)):
+@app.get("/subjects/{subject}")
+async def get_teachers_for_subject(subject: str = Query(...)):
     return await get_teachers_by_subject(subject)
 
 
