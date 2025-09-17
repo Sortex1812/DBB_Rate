@@ -37,3 +37,11 @@ async def get_stats() -> dict:
 async def get_teachers_by_subject(subject: str):
     subjects_collection = db["subjects"]
     return subjects_collection.find({"subject": subject})
+
+async def login_user(username: str, password: str) -> dict:
+    users_collection = db["user"]
+    user = await users_collection.find_one({"username": username, "password": password})
+    if user:
+        return {"username": user["username"], "role": user["role"]}
+    else:
+        return {}

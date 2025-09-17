@@ -7,6 +7,7 @@ from .crud import (
     get_feedbacks,
     get_stats,
     get_teachers_by_subject,
+    login_user,
 )
 from .db import ensure_indexes
 import asyncio
@@ -28,6 +29,13 @@ async def post_feedback(payload: FeedbackIn):
     created = await create_feedback(d)
     return created
 
+@app.post("/login")
+async def login(user: str = Query(...), password: str = Query(...)):
+    logined_user = await login_user(user, password)
+    if logined_user:
+        return {"message": "Login successful", "role": logined_user["role"]}
+    else:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
 
 @app.get("/feedbacks")
 async def list_feedbacks(limit: int = 100):
