@@ -29,6 +29,7 @@ async def post_feedback(payload: FeedbackIn):
     created = await create_feedback(d)
     return created
 
+
 @app.post("/login")
 async def login(user: str = Query(...), password: str = Query(...)):
     logined_user = await login_user(user, password)
@@ -36,6 +37,7 @@ async def login(user: str = Query(...), password: str = Query(...)):
         return {"message": "Login successful", "role": logined_user["role"]}
     else:
         raise HTTPException(status_code=401, detail="Invalid credentials")
+
 
 @app.get("/feedbacks")
 async def list_feedbacks(limit: int = 100):
@@ -46,9 +48,11 @@ async def list_feedbacks(limit: int = 100):
 async def stats():
     return await get_stats()
 
+
 @app.get("/subjects/{subject}")
 async def get_subjects():
     return await get_subjects()
+
 
 @app.get("/subjects/{subject}")
 async def get_teachers_for_subject(subject: str = Query(...)):

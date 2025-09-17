@@ -17,7 +17,9 @@ if page == "Feedback abgeben":
     with st.form("feedback_form"):
         subject = st.text_input("Fach / Thema", value="Mathe")
         mood = st.selectbox("Stimmung", ["😀", "🙂", "😐", "😕", "😞"])
-        difficulty = st.radio("Wie schwer war die Stunde?", ["leicht", "mittel", "schwer"])
+        difficulty = st.radio(
+            "Wie schwer war die Stunde?", ["leicht", "mittel", "schwer"]
+        )
         comment = st.text_area("Verbesserungsvorschlag (optional)")
         submitted = st.form_submit_button("Absenden")
     if submitted:
@@ -25,11 +27,11 @@ if page == "Feedback abgeben":
             "subject": subject,
             "mood": mood,
             "difficulty": difficulty,
-            "comment": comment or None
+            "comment": comment or None,
         }
         try:
             resp = requests.post(f"{API_BASE}/feedback", json=payload, timeout=5)
-            if resp.status_code in (200,201):
+            if resp.status_code in (200, 201):
                 st.success("Danke! Dein Feedback wurde anonym gesendet.")
             else:
                 st.error(f"Fehler: {resp.status_code} {resp.text}")
@@ -51,7 +53,9 @@ else:
         feedbacks = requests.get(f"{API_BASE}/feedbacks?limit=50").json()
         comments = [f["comment"] for f in feedbacks if f.get("comment")]
         for f in feedbacks[:20]:
-            st.write(f"- **{f['subject']}** — {f['difficulty']} — {f['mood']} — {f.get('comment') or ''}")
+            st.write(
+                f"- **{f['subject']}** — {f['difficulty']} — {f['mood']} — {f.get('comment') or ''}"
+            )
 
         if comments:
             st.subheader("Wordcloud der Kommentare")
