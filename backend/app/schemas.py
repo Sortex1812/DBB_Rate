@@ -4,6 +4,7 @@ from typing import Optional
 from datetime import datetime
 
 class FeedbackIn(BaseModel):
+    teacher: str = Field(..., examples=["Herr Müller"])
     subject: str = Field(..., examples=["Mathe"])
     mood: str = Field(..., examples=["🙂"])  # or 'good/neutral/bad'
     difficulty: str = Field(..., examples=["mittel"])  # leicht/mittel/schwer

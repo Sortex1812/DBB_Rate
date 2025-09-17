@@ -10,9 +10,10 @@ def feedback_doc(payload: dict) -> dict:
 def serialize_feedback(doc: dict) -> dict:
     return {
         "id": str(doc.get("_id")),
+        "teacher": doc.get("teacher"),
         "subject": doc.get("subject"),
         "mood": doc.get("mood"),
         "difficulty": doc.get("difficulty"),
         "comment": doc.get("comment"),
-        "timestamp": doc.get("timestamp").isoformat() if doc.get("timestamp") else None,
+        "timestamp": t.isoformat() if (t := doc.get("timestamp")) else None,
     }

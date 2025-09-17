@@ -8,9 +8,12 @@ async def create_feedback(payload: dict) -> dict:
     payload["timestamp"] = datetime.now()
     res = await feedback_collection.insert_one(payload)
     created = await feedback_collection.find_one({"_id": res.inserted_id})
-    created["id"] = str(created["_id"])
-    del created["_id"]
-    return created
+    if created:
+        created["id"] = str(created["_id"])
+        del created["_id"]
+        return created
+    else:
+        return {}
 
 async def get_feedbacks(limit: int = 100) -> List[dict]:
     cursor = feedback_collection.find().sort("timestamp", -1).limit(limit)
@@ -25,10 +28,10 @@ async def get_stats() -> dict:
     pipeline = [
         {"$group": {"_id": "$difficulty", "count": {"$sum": 1}}}
     ]
-    cursor = feedback_collection.aggregate(pipeline)
+    cursor = await feedback_collection.aggregate(pipeline)
     by_difficulty = {doc["_id"]: doc["count"] for doc in await cursor.to_list(length=100)}
     # aggregation for mood
     pipeline2 = [{"$group": {"_id": "$mood", "count": {"$sum": 1}}}]
-    cursor2 = feedback_collection.aggregate(pipeline2)
+    cursor2 = await feedback_collection.aggregate(pipeline2)
     by_mood = {doc["_id"]: doc["count"] for doc in await cursor2.to_list(length=100)}
     return {"total": total, "by_difficulty": by_difficulty, "by_mood": by_mood}
