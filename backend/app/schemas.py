@@ -17,3 +17,12 @@ class Stats(BaseModel):
     total: int
     by_difficulty: dict
     by_mood: dict
+
+class User(BaseModel):
+    username: str
+    role: str
+    password: str
+
+class Subjects(BaseModel):
+    subject: str
+    teachers: list[str]

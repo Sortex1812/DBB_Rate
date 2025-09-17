@@ -35,7 +35,5 @@ async def get_stats() -> dict:
     return {"total": total, "by_difficulty": by_difficulty, "by_mood": by_mood}
 
 async def get_teachers_by_subject(subject: str):
-    # Assuming you have a "teachers" collection with "subjects" field (list of subjects)
-    teachers_collection = db["teachers"]
-    teachers = teachers_collection.find({"subjects": subject})
-    return [t["name"] for t in teachers]
+    subjects_collection = db["subjects"]
+    return subjects_collection.find({"subject": subject})
