@@ -1,11 +1,16 @@
 import asyncio
 
 import uvicorn
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Path, Query
 from fastapi.middleware.cors import CORSMiddleware
 
-from .crud import (create_feedback, get_feedbacks, get_stats,
-                   get_teachers_by_subject, login_user)
+from .crud import (
+    create_feedback,
+    get_feedbacks,
+    get_stats,
+    get_teachers_by_subject,
+    login_user,
+)
 from .db import ensure_indexes
 from .schemas import FeedbackIn
 
@@ -52,7 +57,7 @@ async def get_subjects():
 
 
 @app.get("/subjects/{subject}")
-async def get_teachers_for_subject(subject: str = Query(...)):
+async def get_teachers_for_subject(subject: str = Path(...)):
     return await get_teachers_by_subject(subject)
 
 

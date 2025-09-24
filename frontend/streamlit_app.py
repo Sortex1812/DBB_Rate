@@ -7,7 +7,7 @@ from wordcloud import WordCloud
 
 st.set_page_config(page_title="Schüler Feedback", layout="wide")
 
-API_BASE = st.secrets.get("API_BASE", os.getenv("API_BASE", "http://localhost:8000"))
+API_BASE = os.getenv("API_BASE", "http://localhost:8000")
 
 # ---------------------
 # Login
@@ -19,11 +19,13 @@ if "role" not in st.session_state:
         password = st.text_input("Passwort", type="password")
         submitted = st.form_submit_button("Login")
     if submitted:
-        resp = requests.post(f"{API_BASE}/login", json={"username": username, "password": password})
+        resp = requests.post(
+            f"{API_BASE}/login", params={"user": username, "password": password}
+        )
         if resp.status_code == 200:
             data = resp.json()
             st.session_state["role"] = data["role"]
-            st.session_state["username"] = data["username"]
+            st.session_state["username"] = username
             st.rerun()
         elif resp.status_code == 401:
             st.error("Ungültige Login-Daten")
@@ -58,16 +60,24 @@ if role == "student":
 
             # Fetch teachers for selected subject
             try:
-                teachers = requests.get(f"{API_BASE}/subjects/{subject}", timeout=5).json()
+                teachers = requests.get(
+                    f"{API_BASE}/subjects/{subject}", timeout=5
+                ).json()
             except Exception as e:
                 teachers = []
                 st.error(f"Konnte Lehrer nicht laden: {e}")
 
-            teacher = st.selectbox("Lehrer", teachers) if teachers else st.text_input("Lehrer (frei eingeben)")
+            teacher = (
+                st.selectbox("Lehrer", teachers)
+                if teachers
+                else st.text_input("Lehrer (frei eingeben)")
+            )
 
             # Rest of feedback form
             mood = st.selectbox("Stimmung", ["😀", "🙂", "😐", "😕", "😞"])
-            difficulty = st.radio("Wie schwer war die Stunde?", ["leicht", "mittel", "schwer"])
+            difficulty = st.radio(
+                "Wie schwer war die Stunde?", ["leicht", "mittel", "schwer"]
+            )
             comment = st.text_area("Verbesserungsvorschlag (optional)")
             submitted = st.form_submit_button("Absenden")
 
@@ -104,16 +114,24 @@ if role == "student":
 
             # Fetch teachers for selected subject
             try:
-                teachers = requests.get(f"{API_BASE}/subjects/{subject}", timeout=5).json()
+                teachers = requests.get(
+                    f"{API_BASE}/subjects/{subject}", timeout=5
+                ).json()
             except Exception as e:
                 teachers = []
                 st.error(f"Konnte Lehrer nicht laden: {e}")
 
-            teacher = st.selectbox("Lehrer", teachers) if teachers else st.text_input("Lehrer (frei eingeben)")
+            teacher = (
+                st.selectbox("Lehrer", teachers)
+                if teachers
+                else st.text_input("Lehrer (frei eingeben)")
+            )
 
             # Rest of feedback form
             mood = st.selectbox("Stimmung", ["😀", "🙂", "😐", "😕", "😞"])
-            difficulty = st.radio("Wie schwer war die Stunde?", ["leicht", "mittel", "schwer"])
+            difficulty = st.radio(
+                "Wie schwer war die Stunde?", ["leicht", "mittel", "schwer"]
+            )
             comment = st.text_area("Verbesserungsvorschlag (optional)")
             submitted = st.form_submit_button("Absenden")
 
