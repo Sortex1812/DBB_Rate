@@ -8,6 +8,8 @@ DB_NAME = os.getenv("MONGO_DB", "feedbackdb")
 client = AsyncMongoClient(MONGO_URI)
 db = client[DB_NAME]
 feedback_collection = db["feedbacks"]
+user_collection = db["users"]
+subject_collection = db["subjects"]
 
 
 async def ensure_indexes():
