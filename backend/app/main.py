@@ -1,16 +1,13 @@
+import asyncio
+
 import uvicorn
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from .schemas import FeedbackIn
-from .crud import (
-    create_feedback,
-    get_feedbacks,
-    get_stats,
-    get_teachers_by_subject,
-    login_user,
-)
+
+from .crud import (create_feedback, get_feedbacks, get_stats,
+                   get_teachers_by_subject, login_user)
 from .db import ensure_indexes
-import asyncio
+from .schemas import FeedbackIn
 
 app = FastAPI(title="Schueler Feedback API")
 

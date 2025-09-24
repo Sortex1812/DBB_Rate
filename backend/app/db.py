@@ -1,6 +1,6 @@
 import os
-from pymongo import MongoClient
-from pymongo import AsyncMongoClient
+
+from pymongo import AsyncMongoClient, MongoClient
 
 MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
 DB_NAME = os.getenv("MONGO_DB", "feedbackdb")

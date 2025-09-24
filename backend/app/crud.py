@@ -1,7 +1,8 @@
-from typing import List
-from .db import feedback_collection, db
-from .models import feedback_doc, serialize_feedback
 from datetime import datetime
+from typing import List
+
+from .db import db, feedback_collection, subject_collection, user_collection
+from .models import feedback_doc, serialize_feedback
 
 
 async def create_feedback(payload: dict) -> dict:
@@ -39,20 +40,17 @@ async def get_stats() -> dict:
 
 
 async def get_subjects() -> List[str]:
-    subjects_collection = db["subjects"]
-    subjects = await subjects_collection.distinct("subject")
+    subjects = await subject_collection.distinct("subject")
     return subjects
 
 
 async def get_teachers_by_subject(subject: str):
-    subjects_collection = db["subjects"]
-    teachers = await subjects_collection.find_one({"subject": subject})
+    teachers = await subject_collection.find_one({"subject": subject})
     return teachers
 
 
 async def login_user(username: str, password: str) -> dict:
-    users_collection = db["user"]
-    user = await users_collection.find_one({"username": username, "password": password})
+    user = await user_collection.find_one({"username": username, "password": password})
     if user:
         return {"username": user["username"], "role": user["role"]}
     else:

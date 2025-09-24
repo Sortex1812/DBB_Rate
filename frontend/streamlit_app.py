@@ -1,8 +1,9 @@
-import streamlit as st
-import requests
 import os
-from wordcloud import WordCloud
+
 import matplotlib.pyplot as plt
+import requests
+import streamlit as st
+from wordcloud import WordCloud
 
 st.set_page_config(page_title="Schüler Feedback", layout="wide")
 
