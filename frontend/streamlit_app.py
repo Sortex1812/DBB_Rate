@@ -57,31 +57,28 @@ if role == "student":
     if not subjects:
         st.warning("Keine Fächer gefunden.")
     else:
-        with st.form("feedback_form"):
-            # Subject selection
-            subject = st.selectbox("Fach", subjects)
+        # Subject selection
+        subject = st.selectbox("Fach", subjects)
 
-            # Fetch teachers for selected subject
-            try:
-                teachers = requests.get(
-                    f"{API_BASE}/subjects/{subject}", timeout=5
-                ).json()
-            except Exception as e:
-                teachers = []
-                st.error(f"Konnte Lehrer nicht laden: {e}")
-            teacher = (
-                st.selectbox("Lehrer", dict(teachers)['teachers'])
-                if teachers
-                else st.text_input("Lehrer (frei eingeben)")
-            )
+        # Fetch teachers for selected subject
+        try:
+            teachers = requests.get(f"{API_BASE}/subjects/{subject}", timeout=5).json()
+        except Exception as e:
+            teachers = []
+            st.error(f"Konnte Lehrer nicht laden: {e}")
+        teacher = (
+            st.selectbox("Lehrer", dict(teachers)["teachers"])
+            if teachers
+            else st.text_input("Lehrer (frei eingeben)")
+        )
 
-            # Rest of feedback form
-            mood = st.selectbox("Stimmung", ["😀", "🙂", "😐", "😕", "😞"])
-            difficulty = st.radio(
-                "Wie schwer war die Stunde?", ["leicht", "mittel", "schwer"]
-            )
-            comment = st.text_area("Verbesserungsvorschlag (optional)")
-            submitted = st.form_submit_button("Absenden")
+        # Rest of feedback form
+        mood = st.selectbox("Stimmung", ["😀", "🙂", "😐", "😕", "😞"])
+        difficulty = st.radio(
+            "Wie schwer war die Stunde?", ["leicht", "mittel", "schwer"]
+        )
+        comment = st.text_area("Verbesserungsvorschlag (optional)")
+        submitted = st.button("Absenden")
 
         if submitted:
             payload = {
