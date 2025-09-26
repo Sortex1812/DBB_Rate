@@ -39,13 +39,16 @@ async def get_stats() -> dict:
     return {"total": total, "by_difficulty": by_difficulty, "by_mood": by_mood}
 
 
-async def get_subjects() -> List[str]:
+async def get_all_subjects() -> List[str]:
     subjects = await subject_collection.distinct("subject")
     return subjects
 
 
 async def get_teachers_by_subject(subject: str):
     teachers = await subject_collection.find_one({"subject": subject})
+    if teachers:
+        teachers["id"] = str(teachers["_id"])
+        del teachers["_id"]
     return teachers
 
 

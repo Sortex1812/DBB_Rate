@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .crud import (
     create_feedback,
+    get_all_subjects,
     get_feedbacks,
     get_stats,
     get_teachers_by_subject,
@@ -33,8 +34,8 @@ async def post_feedback(payload: FeedbackIn):
 
 
 @app.post("/login")
-async def login(user: str = Query(...), password: str = Query(...)):
-    logined_user = await login_user(user, password)
+async def login(username: str = Query(...), password: str = Query(...)):
+    logined_user = await login_user(username, password)
     if logined_user:
         return {"message": "Login successful", "role": logined_user["role"]}
     else:
@@ -51,9 +52,9 @@ async def stats():
     return await get_stats()
 
 
-@app.get("/subjects/{subject}")
+@app.get("/subjects")
 async def get_subjects():
-    return await get_subjects()
+    return await get_all_subjects()
 
 
 @app.get("/subjects/{subject}")
