@@ -1,0 +1,10 @@
+[{
+  "_id": {
+    "$oid": "68d67255682ae309c4089bf9"
+  },
+  "subject": "Mathe",
+  "teachers": [
+    "teacher1",
+    "teacher2"
+  ]
+}]
