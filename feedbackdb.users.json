@@ -1,16 +1,32 @@
-[{
-  "_id": {
-    "$oid": "68d6724c682ae309c4089bf6"
+[
+  {
+    "_id": { "$oid": "68d6724c682ae309c4089bf6" },
+    "username": "maria.schneider",
+    "password": "teachpass",
+    "role": "teacher"
   },
-  "username": "teacher1",
-  "password": "teachpass",
-  "role": "teacher"
-},
-{
-  "_id": {
-    "$oid": "68d6724c682ae309c4089bf7"
+  {
+    "_id": { "$oid": "68d6724c682ae309c4089bf7" },
+    "username": "paul.meyer",
+    "password": "teachpass",
+    "role": "teacher"
   },
-  "username": "student1",
-  "password": "studpass",
-  "role": "student"
-}]
+  {
+    "_id": { "$oid": "68d6724c682ae309c4089bf8" },
+    "username": "anna.bauer",
+    "password": "studpass",
+    "role": "student"
+  },
+  {
+    "_id": { "$oid": "68d6724c682ae309c4089bf9" },
+    "username": "lukas.fischer",
+    "password": "studpass",
+    "role": "student"
+  },
+  {
+    "_id": { "$oid": "68d6724c682ae309c4089bfa" },
+    "username": "sophie.wagner",
+    "password": "studpass",
+    "role": "student"
+  }
+]

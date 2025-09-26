@@ -1,4 +1,5 @@
 import asyncio
+import os
 
 import uvicorn
 from fastapi import FastAPI, HTTPException, Path, Query
@@ -14,8 +15,14 @@ from .crud import (
 )
 from .db import ensure_indexes
 from .schemas import FeedbackIn
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = FastAPI(title="Schueler Feedback API")
+
+PORT = int(os.getenv("PORT", 8080))
+HOST = os.getenv("HOST", "0.0.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -63,4 +70,4 @@ async def get_teachers_for_subject(subject: str = Path(...)):
 
 
 if __name__ == "__main__":
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("app.main:app", host=HOST, port=PORT, reload=True)

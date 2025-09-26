@@ -1,10 +1,17 @@
-[{
-  "_id": {
-    "$oid": "68d67255682ae309c4089bf9"
+[
+  {
+    "_id": { "$oid": "68d67255682ae309c4089bf9" },
+    "subject": "Mathematik",
+    "teachers": ["maria.schneider"]
   },
-  "subject": "Mathe",
-  "teachers": [
-    "teacher1",
-    "teacher2"
-  ]
-}]
+  {
+    "_id": { "$oid": "68d67255682ae309c4089bfa" },
+    "subject": "Englisch",
+    "teachers": ["paul.meyer"]
+  },
+  {
+    "_id": { "$oid": "68d67255682ae309c4089bfb" },
+    "subject": "Geschichte",
+    "teachers": ["maria.schneider", "paul.meyer"]
+  }
+]
