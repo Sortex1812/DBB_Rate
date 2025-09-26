@@ -3,14 +3,17 @@ import os
 import matplotlib.pyplot as plt
 import requests
 import streamlit as st
-from wordcloud import WordCloud
+from wordcloud import WordCloud, STOPWORDS
 from dotenv import load_dotenv
+import stopwordsiso
+import pandas as pd
+import altair as alt
 
 load_dotenv()
 
 st.set_page_config(page_title="Schüler Feedback", layout="wide")
 
-API_BASE = os.getenv("API_BASE", "http://localhost:8000")
+API_BASE = os.getenv("API_BASE", "http://localhost:8080")
 
 # ---------------------
 # Login
@@ -106,11 +109,44 @@ elif role == "teacher":
         st.subheader("Gesamt")
         st.metric("Feedbacks gesamt", stats.get("total", 0))
 
+        # Schwierigkeit
+        difficulty_data = stats.get("by_difficulty", {})
+        df_diff = pd.DataFrame(list(difficulty_data.items()), columns=["Schwierigkeit", "Anzahl"])
+
+        diff_chart = (
+            alt.Chart(df_diff)
+            .mark_bar()
+            .encode(
+                x=alt.X("Schwierigkeit:N", axis=alt.Axis(labelAngle=0), title=None),  # Labels horizontal (0°)
+                y=alt.Y("Anzahl:Q", axis=alt.Axis(title=None)),
+                tooltip=["Schwierigkeit", "Anzahl"]
+            )
+            .configure_axisY(tickMinStep=1)
+            .properties(height=300)
+        )
+
         st.subheader("Schwierigkeit")
-        st.bar_chart(data=stats.get("by_difficulty", {}))
+        st.altair_chart(diff_chart, use_container_width=True)
+
+
+        # Stimmung
+        mood_data = stats.get("by_mood", {})
+        df_mood = pd.DataFrame(list(mood_data.items()), columns=["Stimmung", "Anzahl"])
+
+        mood_chart = (
+            alt.Chart(df_mood)
+            .mark_bar()
+            .encode(
+                x=alt.X("Stimmung:N", axis=alt.Axis(labelAngle=0, title=None)),  # Labels horizontal
+                y=alt.Y("Anzahl:Q", axis=alt.Axis(title=None)),
+                tooltip=["Stimmung", "Anzahl"]
+            )
+            .configure_axisY(tickMinStep=1)
+        ).properties(height=300)
 
         st.subheader("Stimmung")
-        st.bar_chart(data=stats.get("by_mood", {}))
+        st.altair_chart(mood_chart, use_container_width=True)
+
 
         st.subheader("Letzte Kommentare")
         feedbacks = requests.get(f"{API_BASE}/feedbacks?limit=50").json()
@@ -122,8 +158,18 @@ elif role == "teacher":
 
         if comments:
             st.subheader("Wordcloud der Kommentare")
-            text = " ".join(comments)
-            wc = WordCloud(width=800, height=400, collocations=False).generate(text)
+            text = " ".join(comments).lower()
+            # hole deutsche Stopwörter
+            german_sw = stopwordsiso.stopwords("de")
+            # kombiniere mit Standard-STOPWORDS von WordCloud
+            stopwords = set(STOPWORDS).union(german_sw)
+            wc = WordCloud(
+                width=800,
+                height=400,
+                collocations=False,
+                stopwords=stopwords,
+                background_color="white"
+            ).generate(text)
             fig, ax = plt.subplots(figsize=(10, 4.5))
             ax.imshow(wc, interpolation="bilinear")
             ax.axis("off")
