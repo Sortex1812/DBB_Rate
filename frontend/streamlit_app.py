@@ -13,7 +13,8 @@ load_dotenv()
 
 st.set_page_config(page_title="Schüler Feedback", layout="wide")
 
-API_BASE = os.getenv("API_BASE", "http://localhost:8080")
+PORT = int(os.getenv("PORT", 8000))
+API_BASE = os.getenv("API_BASE", f"http://localhost:{PORT}")
 
 # ---------------------
 # Login
@@ -151,7 +152,7 @@ elif role == "teacher":
         st.subheader("Letzte Kommentare")
         feedbacks = requests.get(f"{API_BASE}/feedbacks?limit=50").json()
         comments = [f["comment"] for f in feedbacks if f.get("comment")]
-        for f in feedbacks[:20]:
+        for f in feedbacks[:5]:
             st.write(
                 f"- **{f['subject']}** — {f['difficulty']} — {f['mood']} — {f.get('comment') or ''}"
             )
