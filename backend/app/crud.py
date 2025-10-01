@@ -17,23 +17,29 @@ async def create_feedback(payload: dict) -> dict:
         return {}
 
 
-async def get_feedbacks(limit: int = 100) -> List[dict]:
-    cursor = feedback_collection.find().sort("timestamp", -1).limit(limit)
+async def get_feedbacks(teacher: str, limit: int = 100) -> List[dict]:
+    cursor = feedback_collection.find({"teacher":teacher}).sort("timestamp", -1).limit(limit)
     results = []
     async for doc in cursor:
         results.append(serialize_feedback(doc))
     return results
 
 
-async def get_stats() -> dict:
+async def get_stats(teacher: str) -> dict:
     total = await feedback_collection.count_documents({})
-    pipeline = [{"$group": {"_id": "$difficulty", "count": {"$sum": 1}}}]
+    pipeline = [
+        {"$match": {"teacher": teacher}},
+        {"$group": {"_id": "$difficulty", "count": {"$sum": 1}}}
+    ]
     cursor = await feedback_collection.aggregate(pipeline)
     by_difficulty = {
         doc["_id"]: doc["count"] for doc in await cursor.to_list(length=100)
     }
 
-    pipeline2 = [{"$group": {"_id": "$mood", "count": {"$sum": 1}}}]
+    pipeline2 = [
+        {"$match": {"teacher": teacher}},
+        {"$group": {"_id": "$mood", "count": {"$sum": 1}}}
+    ]
     cursor2 = await feedback_collection.aggregate(pipeline2)
     by_mood = {doc["_id"]: doc["count"] for doc in await cursor2.to_list(length=100)}
     return {"total": total, "by_difficulty": by_difficulty, "by_mood": by_mood}

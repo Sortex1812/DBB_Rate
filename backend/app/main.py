@@ -49,14 +49,14 @@ async def login(username: str = Query(...), password: str = Query(...)):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
 
-@app.get("/feedbacks")
-async def list_feedbacks(limit: int = 100):
-    return await get_feedbacks(limit=limit)
+@app.get("/feedbacks/{teacher}")
+async def list_feedbacks(teacher: str = Path(...), limit: int = 100):
+    return await get_feedbacks(teacher=teacher, limit=limit)
 
 
-@app.get("/stats")
-async def stats():
-    return await get_stats()
+@app.get("/stats/{teacher}")
+async def stats(teacher: str = Path(...)):
+    return await get_stats(teacher)
 
 
 @app.get("/subjects")
