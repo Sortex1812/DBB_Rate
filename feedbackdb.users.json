@@ -6,6 +6,12 @@
     "role": "teacher"
   },
   {
+    "_id": { "$oid": "68d6724c682ae309c4089bff" },
+    "username": "schmidt.test",
+    "password": "teachpass",
+    "role": "teacher"
+  },
+  {
     "_id": { "$oid": "68d6724c682ae309c4089bf7" },
     "username": "paul.meyer",
     "password": "teachpass",
@@ -13,7 +19,7 @@
   },
   {
     "_id": { "$oid": "68d6724c682ae309c4089bf8" },
-    "username": "anna.bauer",
+    "username": "it3b.test",
     "password": "studpass",
     "role": "student"
   },

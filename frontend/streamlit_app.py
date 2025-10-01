@@ -53,7 +53,7 @@ if role == "student":
 
     # Load available subjects from backend
     try:
-        subjects = requests.get(f"{API_BASE}/subjects", timeout=5).json()
+        subjects = requests.get(f"{API_BASE}/subjects", timeout=30).json()
     except Exception as e:
         subjects = []
         st.error(f"Konnte Fächer nicht laden: {e}")
@@ -66,7 +66,7 @@ if role == "student":
 
         # Fetch teachers for selected subject
         try:
-            teachers = requests.get(f"{API_BASE}/subjects/{subject}", timeout=5).json()
+            teachers = requests.get(f"{API_BASE}/subjects/{subject}", timeout=30).json()
         except Exception as e:
             teachers = []
             st.error(f"Konnte Lehrer nicht laden: {e}")
@@ -93,7 +93,7 @@ if role == "student":
                 "comment": comment or None,
             }
             try:
-                resp = requests.post(f"{API_BASE}/feedback", json=payload, timeout=5)
+                resp = requests.post(f"{API_BASE}/feedback", json=payload, timeout=30)
                 if resp.status_code in (200, 201):
                     st.success("Danke! Dein Feedback wurde anonym gesendet.")
                 else:

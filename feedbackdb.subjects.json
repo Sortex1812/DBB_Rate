@@ -11,7 +11,7 @@
   },
   {
     "_id": { "$oid": "68d67255682ae309c4089bfb" },
-    "subject": "Geschichte",
-    "teachers": ["maria.schneider", "paul.meyer"]
+    "subject": "GI",
+    "teachers": ["schmidt.test"]
   }
 ]
