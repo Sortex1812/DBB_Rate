@@ -48,10 +48,8 @@ st.title("Schüler-Feedback App")
 role = st.session_state["role"]
 
 if role == "student":
-    # Student only has feedback form
     st.header("Schnelles, anonymes Feedback")
 
-    # Load available subjects from backend
     try:
         subjects = requests.get(f"{API_BASE}/subjects", timeout=30).json()
     except Exception as e:
@@ -61,10 +59,8 @@ if role == "student":
     if not subjects:
         st.warning("Keine Fächer gefunden.")
     else:
-        # Subject selection
         subject = st.selectbox("Fach", subjects)
 
-        # Fetch teachers for selected subject
         try:
             teachers = requests.get(f"{API_BASE}/subjects/{subject}", timeout=30).json()
         except Exception as e:
@@ -76,7 +72,6 @@ if role == "student":
             else st.text_input("Lehrer (frei eingeben)")
         )
 
-        # Rest of feedback form
         mood = st.selectbox("Stimmung", ["😀", "🙂", "😐", "😕", "😞"])
         difficulty = st.radio(
             "Wie schwer war die Stunde?", ["leicht", "mittel", "schwer"]
@@ -103,14 +98,12 @@ if role == "student":
 
 
 elif role == "teacher":
-    # Teacher only has dashboard
     st.header("Auswertung")
     try:
-        stats = requests.get(f"{API_BASE}/stats").json()
+        stats = requests.get(f"{API_BASE}/stats", params={"teacher": st.session_state["username"]}).json()
         st.subheader("Gesamt")
         st.metric("Feedbacks gesamt", stats.get("total", 0))
 
-        # Schwierigkeit
         difficulty_data = stats.get("by_difficulty", {})
         df_diff = pd.DataFrame(list(difficulty_data.items()), columns=["Schwierigkeit", "Anzahl"])
 
@@ -130,7 +123,6 @@ elif role == "teacher":
         st.altair_chart(diff_chart, use_container_width=True)
 
 
-        # Stimmung
         mood_data = stats.get("by_mood", {})
         df_mood = pd.DataFrame(list(mood_data.items()), columns=["Stimmung", "Anzahl"])
 
@@ -150,7 +142,7 @@ elif role == "teacher":
 
 
         st.subheader("Letzte Kommentare")
-        feedbacks = requests.get(f"{API_BASE}/feedbacks?limit=50").json()
+        feedbacks = requests.get(f"{API_BASE}/feedbacks", params={"teacher": st.session_state["username"], "limit": 50}).json()
         comments = [f["comment"] for f in feedbacks if f.get("comment")]
         for f in feedbacks[:5]:
             st.write(
@@ -160,9 +152,7 @@ elif role == "teacher":
         if comments:
             st.subheader("Wordcloud der Kommentare")
             text = " ".join(comments).lower()
-            # hole deutsche Stopwörter
             german_sw = stopwordsiso.stopwords("de")
-            # kombiniere mit Standard-STOPWORDS von WordCloud
             stopwords = set(STOPWORDS).union(german_sw)
             wc = WordCloud(
                 width=800,
