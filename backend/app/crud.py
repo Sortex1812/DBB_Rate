@@ -26,7 +26,7 @@ async def get_feedbacks(teacher: str, limit: int = 100) -> List[dict]:
 
 
 async def get_stats(teacher: str) -> dict:
-    total = await feedback_collection.count_documents({})
+    total = await feedback_collection.count_documents({"teacher": teacher})
     pipeline = [
         {"$match": {"teacher": teacher}},
         {"$group": {"_id": "$difficulty", "count": {"$sum": 1}}}

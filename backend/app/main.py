@@ -16,6 +16,9 @@ from .crud import (
 from .db import ensure_indexes
 from .schemas import FeedbackIn
 from dotenv import load_dotenv
+import logging
+
+logger = logging.getLogger("uvicorn.info")
 
 load_dotenv()
 
@@ -51,11 +54,13 @@ async def login(username: str = Query(...), password: str = Query(...)):
 
 @app.get("/feedbacks/{teacher}")
 async def list_feedbacks(teacher: str = Path(...), limit: int = 100):
+    logger.info(f"Fetching feedbacks for teacher: {teacher}")
     return await get_feedbacks(teacher=teacher, limit=limit)
 
 
 @app.get("/stats/{teacher}")
 async def stats(teacher: str = Path(...)):
+    logger.info(f"Fetching stats for teacher: {teacher}")
     return await get_stats(teacher)
 
 

@@ -100,7 +100,7 @@ if role == "student":
 elif role == "teacher":
     st.header("Auswertung")
     try:
-        stats = requests.get(f"{API_BASE}/stats", params={"teacher": st.session_state["username"]}).json()
+        stats = requests.get(f"{API_BASE}/stats/{st.session_state["username"]}", params={"teacher": st.session_state["username"]}).json()
         st.subheader("Gesamt")
         st.metric("Feedbacks gesamt", stats.get("total", 0))
 
@@ -145,7 +145,7 @@ elif role == "teacher":
 
 
         st.subheader("Letzte Kommentare")
-        feedbacks = requests.get(f"{API_BASE}/feedbacks", params={"teacher": st.session_state["username"], "limit": 50}).json()
+        feedbacks = requests.get(f"{API_BASE}/feedbacks/{st.session_state["username"]}", params={"teacher": st.session_state["username"], "limit": 50}).json()
         comments = [f["comment"] for f in feedbacks if f.get("comment")]
         for f in feedbacks[:5]:
             st.write(
