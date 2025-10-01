@@ -107,38 +107,41 @@ elif role == "teacher":
         difficulty_data = stats.get("by_difficulty", {})
         df_diff = pd.DataFrame(list(difficulty_data.items()), columns=["Schwierigkeit", "Anzahl"])
 
-        diff_chart = (
-            alt.Chart(df_diff)
-            .mark_bar()
-            .encode(
-                x=alt.X("Schwierigkeit:N", axis=alt.Axis(labelAngle=0), title=None),  # Labels horizontal (0°)
-                y=alt.Y("Anzahl:Q", axis=alt.Axis(title=None)),
-                tooltip=["Schwierigkeit", "Anzahl"]
+        if df_diff.empty:
+            st.info("Noch keine Schwierigkeitsdaten verfügbar.")
+        else:
+            diff_chart = (
+                alt.Chart(df_diff)
+                .mark_bar()
+                .encode(
+                    x=alt.X("Schwierigkeit:N", axis=alt.Axis(labelAngle=0), title=None),  # Labels horizontal (0°)
+                    y=alt.Y("Anzahl:Q", axis=alt.Axis(title=None)),
+                    tooltip=["Schwierigkeit", "Anzahl"]
+                )
+                .configure_axisY(tickMinStep=1)
+                .properties(height=300)
             )
-            .configure_axisY(tickMinStep=1)
-            .properties(height=300)
-        )
-
-        st.subheader("Schwierigkeit")
-        st.altair_chart(diff_chart, use_container_width=True)
-
+            st.subheader("Schwierigkeit")
+            st.altair_chart(diff_chart, use_container_width=True)
 
         mood_data = stats.get("by_mood", {})
         df_mood = pd.DataFrame(list(mood_data.items()), columns=["Stimmung", "Anzahl"])
 
-        mood_chart = (
-            alt.Chart(df_mood)
-            .mark_bar()
-            .encode(
-                x=alt.X("Stimmung:N", axis=alt.Axis(labelAngle=0, title=None)),  # Labels horizontal
-                y=alt.Y("Anzahl:Q", axis=alt.Axis(title=None)),
-                tooltip=["Stimmung", "Anzahl"]
-            )
-            .configure_axisY(tickMinStep=1)
-        ).properties(height=300)
-
-        st.subheader("Stimmung")
-        st.altair_chart(mood_chart, use_container_width=True)
+        if df_mood.empty:
+            st.info("Noch keine Stimmungsdaten verfügbar.")
+        else:
+            mood_chart = (
+                alt.Chart(df_mood)
+                .mark_bar()
+                .encode(
+                    x=alt.X("Stimmung:N", axis=alt.Axis(labelAngle=0, title=None)),  # Labels horizontal
+                    y=alt.Y("Anzahl:Q", axis=alt.Axis(title=None)),
+                    tooltip=["Stimmung", "Anzahl"]
+                )
+                .configure_axisY(tickMinStep=1)
+            ).properties(height=300)
+            st.subheader("Stimmung")
+            st.altair_chart(mood_chart, use_container_width=True)
 
 
         st.subheader("Letzte Kommentare")
